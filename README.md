@@ -63,5 +63,5 @@ java -jar dist/LocadoraVeiculos.jar
 
 ## Equipe
 
-Felipe Fernandes de Azevedo
-Vitor Savi do Nascimento
+- Felipe Fernandes de Azevedo
+- Vitor Savi do Nascimento
