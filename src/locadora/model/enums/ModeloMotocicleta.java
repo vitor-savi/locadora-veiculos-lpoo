@@ -9,5 +9,5 @@ package locadora.model.enums;
  * @author Vitor Savi
  */
 public enum ModeloMotocicleta {
-    
+    CB_125, CBR_500, FAZER_250, R15
 }

@@ -9,5 +9,5 @@ package locadora.model.enums;
  * @author Vitor Savi
  */
 public enum Marca {
-    
+    VW, GM, FIAT, HONDA, MERCEDES, YAMAHA
 }

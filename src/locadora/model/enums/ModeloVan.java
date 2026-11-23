@@ -9,5 +9,5 @@ package locadora.model.enums;
  * @author Vitor Savi
  */
 public enum ModeloVan {
-    
+    KOMBI, SPRINTER, DUCATO
 }

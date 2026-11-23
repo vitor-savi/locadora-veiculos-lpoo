@@ -9,5 +9,5 @@ package locadora.model.enums;
  * @author Vitor Savi
  */
 public enum Estado {
-    
+    NOVO, LOCADO, DISPONIVEL, VENDIDO
 }
