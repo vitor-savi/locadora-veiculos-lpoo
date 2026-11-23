@@ -9,5 +9,58 @@ package locadora.model;
  * @author Vitor Savi
  */
 public class Cliente {
+    private String nome;
+    private String sobrenome;
+    private String rg;
+    private String cpf;
+    private String endereco;
+    
+    public Cliente(String nome, String sobrenome, String rg, String cpf, String endereco) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.rg = rg;
+        this.cpf = cpf;
+        this.endereco = endereco;
+    }
+    
+    public String getNome() {
+        return this.nome;
+    }
+    
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
+    public String getSobrenome() {
+        return this.sobrenome;
+    }
+    
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+    
+    public String getRg() {
+        return this.rg;
+    }
+    
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
+    
+    public String getCpf() {
+        return this.cpf;
+    }
+    
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+    
+    public String getEndereco() {
+        return this.endereco;
+    }
+    
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
     
 }
