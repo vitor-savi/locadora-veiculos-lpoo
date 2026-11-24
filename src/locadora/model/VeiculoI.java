@@ -33,8 +33,8 @@ public interface VeiculoI {
     
     public int getAno();
     
-    public double getValorVenda();
+    public double getValorParaVenda();
     
-    public double getValorDiaLocacao();
+    public double getValorDiariaLocacao();
             
 }
