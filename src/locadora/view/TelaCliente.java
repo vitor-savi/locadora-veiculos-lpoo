@@ -1,23 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package locadora.view;
 
-/**
- *
- * @author Vitor Savi
- */
-public class TelaCliente extends javax.swing.JDialog {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCliente.class.getName());
+import java.text.ParseException;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import locadora.controller.ClienteController;
+import locadora.exception.ClienteComLocacaoException;
+import locadora.model.Cliente;
+import locadora.view.tablemodel.ClienteTableModel;
 
-    /**
-     * Creates new form TelaCliente
-     */
+public class TelaCliente extends javax.swing.JDialog {
+
+    private final ClienteController clienteController = new ClienteController();
+    private final ClienteTableModel tableModel = new ClienteTableModel();
+
     public TelaCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        tblClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblClientes.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                preencherCampos();
+            }
+        });
+        carregarTabela();
+        setLocationRelativeTo(parent);
     }
 
     /**
@@ -29,59 +35,334 @@ public class TelaCliente extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        pnlConteudo = new javax.swing.JPanel();
+        pnlTopo = new javax.swing.JPanel();
+        pnlCampos = new javax.swing.JPanel();
+        lblNome = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
+        lblSobrenome = new javax.swing.JLabel();
+        txtSobrenome = new javax.swing.JTextField();
+        lblRg = new javax.swing.JLabel();
+        txtRg = new javax.swing.JTextField();
+        lblCpf = new javax.swing.JLabel();
+        txtCpf = new javax.swing.JFormattedTextField();
+        lblEndereco = new javax.swing.JLabel();
+        txtEndereco = new javax.swing.JTextField();
+        pnlBotoes = new javax.swing.JPanel();
+        btnIncluir = new javax.swing.JButton();
+        btnAtualizar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
+        btnLimpar = new javax.swing.JButton();
+        scrClientes = new javax.swing.JScrollPane();
+        tblClientes = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Clientes");
+        getContentPane().setLayout(new java.awt.BorderLayout());
+
+        pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlConteudo.setLayout(new java.awt.BorderLayout(0, 8));
+        pnlTopo.setLayout(new java.awt.BorderLayout());
+        pnlCampos.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do cliente"));
+        pnlCampos.setLayout(new java.awt.GridBagLayout());
+        lblNome.setText("Nome:");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblNome, gridBagConstraints);
+
+        txtNome.setColumns(15);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtNome, gridBagConstraints);
+
+        lblSobrenome.setText("Sobrenome:");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblSobrenome, gridBagConstraints);
+
+        txtSobrenome.setColumns(15);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtSobrenome, gridBagConstraints);
+
+        lblRg.setText("RG:");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblRg, gridBagConstraints);
+
+        txtRg.setColumns(15);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtRg, gridBagConstraints);
+
+        lblCpf.setText("CPF:");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblCpf, gridBagConstraints);
+
+        txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(criarMascara("###.###.###-##")));
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtCpf, gridBagConstraints);
+
+        lblEndereco.setText("Endereço:");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblEndereco, gridBagConstraints);
+
+        txtEndereco.setColumns(30);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtEndereco, gridBagConstraints);
+
+
+        pnlTopo.add(pnlCampos, java.awt.BorderLayout.CENTER);
+
+        pnlBotoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        btnIncluir.setText("Incluir");
+        btnIncluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncluirActionPerformed(evt);
+            }
+        });
+
+        pnlBotoes.add(btnIncluir);
+
+        btnAtualizar.setText("Atualizar");
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
+
+        pnlBotoes.add(btnAtualizar);
+
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+
+        pnlBotoes.add(btnExcluir);
+
+        btnLimpar.setText("Limpar");
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
+
+        pnlBotoes.add(btnLimpar);
+
+
+        pnlTopo.add(pnlBotoes, java.awt.BorderLayout.SOUTH);
+
+
+        pnlConteudo.add(pnlTopo, java.awt.BorderLayout.NORTH);
+
+        scrClientes.setPreferredSize(new java.awt.Dimension(760, 300));
+        tblClientes.setModel(tableModel);
+        scrClientes.setViewportView(tblClientes);
+
+        pnlConteudo.add(scrClientes, java.awt.BorderLayout.CENTER);
+
+
+        getContentPane().add(pnlConteudo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
+        incluir();
+    }//GEN-LAST:event_btnIncluirActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                TelaCliente dialog = new TelaCliente(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+        atualizar();
+    }//GEN-LAST:event_btnAtualizarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        excluir();
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        limparCampos();
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void incluir() {
+        if (!camposValidos()) {
+            return;
+        }
+        Cliente cliente = new Cliente(txtNome.getText().trim(), txtSobrenome.getText().trim(),
+                txtRg.getText().trim(), txtCpf.getText(), txtEndereco.getText().trim());
+        clienteController.incluir(cliente);
+        carregarTabela();
+        limparCampos();
+        JOptionPane.showMessageDialog(this, "Cliente incluído com sucesso.");
+    }
+
+    private void atualizar() {
+        Cliente cliente = clienteSelecionado();
+        if (cliente == null || !camposValidos()) {
+            return;
+        }
+        clienteController.atualizar(cliente, txtNome.getText().trim(), txtSobrenome.getText().trim(),
+                txtRg.getText().trim(), txtCpf.getText(), txtEndereco.getText().trim());
+        carregarTabela();
+        limparCampos();
+        JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso.");
+    }
+
+    private void excluir() {
+        Cliente cliente = clienteSelecionado();
+        if (cliente == null) {
+            return;
+        }
+        int resposta = JOptionPane.showConfirmDialog(this,
+                "Excluir o cliente " + cliente.getNome() + " " + cliente.getSobrenome() + "?",
+                "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+        try {
+            clienteController.excluir(cliente);
+            carregarTabela();
+            limparCampos();
+            JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso.");
+        } catch (ClienteComLocacaoException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Não foi possível excluir",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private Cliente clienteSelecionado() {
+        int linha = tblClientes.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente na tabela.");
+            return null;
+        }
+        return tableModel.getItem(linha);
+    }
+
+    private void preencherCampos() {
+        int linha = tblClientes.getSelectedRow();
+        if (linha < 0) {
+            return;
+        }
+        Cliente c = tableModel.getItem(linha);
+        txtNome.setText(c.getNome());
+        txtSobrenome.setText(c.getSobrenome());
+        txtRg.setText(c.getRg());
+        txtCpf.setValue(c.getCpf());
+        txtEndereco.setText(c.getEndereco());
+    }
+
+    private boolean camposValidos() {
+        if (txtNome.getText().trim().isEmpty() || txtSobrenome.getText().trim().isEmpty()
+                || txtRg.getText().trim().isEmpty() || txtEndereco.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return false;
+        }
+        try {
+            txtCpf.commitEdit();
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "CPF incompleto.");
+            return false;
+        }
+        return true;
+    }
+
+    private void limparCampos() {
+        txtNome.setText("");
+        txtSobrenome.setText("");
+        txtRg.setText("");
+        txtCpf.setValue(null);
+        txtEndereco.setText("");
+        tblClientes.clearSelection();
+    }
+
+    private void carregarTabela() {
+        tableModel.setDados(clienteController.listarTodos());
+    }
+
+    private static javax.swing.text.MaskFormatter criarMascara(String mascara) {
+        try {
+            javax.swing.text.MaskFormatter m = new javax.swing.text.MaskFormatter(mascara);
+            m.setPlaceholderCharacter('_');
+            return m;
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAtualizar;
+    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnIncluir;
+    private javax.swing.JButton btnLimpar;
+    private javax.swing.JFormattedTextField txtCpf;
+    private javax.swing.JLabel lblCpf;
+    private javax.swing.JLabel lblEndereco;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblRg;
+    private javax.swing.JLabel lblSobrenome;
+    private javax.swing.JPanel pnlBotoes;
+    private javax.swing.JPanel pnlCampos;
+    private javax.swing.JPanel pnlConteudo;
+    private javax.swing.JPanel pnlTopo;
+    private javax.swing.JScrollPane scrClientes;
+    private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtEndereco;
+    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtRg;
+    private javax.swing.JTextField txtSobrenome;
     // End of variables declaration//GEN-END:variables
 }
