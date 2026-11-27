@@ -8,6 +8,7 @@ import locadora.model.enums.Categoria;
 import locadora.model.enums.Estado;
 import locadora.model.enums.Marca;
 import locadora.model.enums.ModeloAutomovel;
+import locadora.model.enums.TipoVeiculo;
 
 /**
  *
@@ -36,6 +37,11 @@ public class Automovel extends Veiculo {
         }
         
         return 0.0;
+    }
+    
+    @Override
+    public Enum<?> getTipo() {
+        return TipoVeiculo.AUTOMOVEL;
     }
 
     @Override

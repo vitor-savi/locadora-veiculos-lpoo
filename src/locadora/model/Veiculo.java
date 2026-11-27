@@ -95,6 +95,8 @@ public abstract class Veiculo implements VeiculoI {
     @Override
     public abstract double getValorDiariaLocacao();
     
+    public abstract Enum<?> getTipo();
+    
     public abstract Enum<?> getModelo();
     
 }
