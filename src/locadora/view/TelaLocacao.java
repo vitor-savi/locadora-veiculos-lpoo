@@ -1,23 +1,57 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package locadora.view;
 
-/**
- *
- * @author Vitor Savi
- */
-public class TelaLocacao extends javax.swing.JDialog {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaLocacao.class.getName());
+import java.awt.Component;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import locadora.controller.ClienteController;
+import locadora.controller.LocacaoController;
+import locadora.controller.VeiculoController;
+import locadora.exception.ClienteComLocacaoException;
+import locadora.exception.VeiculoIndisponivelException;
+import locadora.model.Cliente;
+import locadora.model.Veiculo;
+import locadora.model.enums.Categoria;
+import locadora.model.enums.Estado;
+import locadora.model.enums.Marca;
+import locadora.model.enums.TipoVeiculo;
+import locadora.util.Formatador;
+import locadora.view.tablemodel.VeiculoLocacaoTableModel;
 
-    /**
-     * Creates new form TelaLocacao
-     */
+public class TelaLocacao extends javax.swing.JDialog {
+
+    private final ClienteController clienteController = new ClienteController();
+    private final VeiculoController veiculoController = new VeiculoController();
+    private final LocacaoController locacaoController = new LocacaoController();
+    private final VeiculoLocacaoTableModel tableModel = new VeiculoLocacaoTableModel();
+
     public TelaLocacao(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        tblVeiculos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        cbCliente.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Cliente) {
+                    Cliente c = (Cliente) value;
+                    setText(c.getNome() + " " + c.getSobrenome() + " - " + c.getCpf());
+                } else if (value == null) {
+                    setText("Nenhum cliente encontrado");
+                }
+                return this;
+            }
+        });
+        txtData.setValue(Formatador.data(Calendar.getInstance()));
+        carregarClientes();
+        carregarVeiculos();
+        setLocationRelativeTo(parent);
     }
 
     /**
@@ -29,59 +63,284 @@ public class TelaLocacao extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        pnlConteudo = new javax.swing.JPanel();
+        pnlTopo = new javax.swing.JPanel();
+        pnlCliente = new javax.swing.JPanel();
+        pnlBusca = new javax.swing.JPanel();
+        lblBusca = new javax.swing.JLabel();
+        txtBuscaCliente = new javax.swing.JTextField();
+        btnBuscarCliente = new javax.swing.JButton();
+        pnlSelecaoCliente = new javax.swing.JPanel();
+        lblCliente = new javax.swing.JLabel();
+        cbCliente = new javax.swing.JComboBox<>();
+        pnlFiltros = new javax.swing.JPanel();
+        lblTipo = new javax.swing.JLabel();
+        cbTipo = new javax.swing.JComboBox<>();
+        lblMarca = new javax.swing.JLabel();
+        cbMarca = new javax.swing.JComboBox<>();
+        lblCategoria = new javax.swing.JLabel();
+        cbCategoria = new javax.swing.JComboBox<>();
+        btnFiltrar = new javax.swing.JButton();
+        scrVeiculos = new javax.swing.JScrollPane();
+        tblVeiculos = new javax.swing.JTable();
+        pnlRodape = new javax.swing.JPanel();
+        lblDias = new javax.swing.JLabel();
+        txtDias = new javax.swing.JTextField();
+        lblData = new javax.swing.JLabel();
+        txtData = new javax.swing.JFormattedTextField();
+        btnLocar = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Locação de veículos");
+        getContentPane().setLayout(new java.awt.BorderLayout());
+
+        pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlConteudo.setLayout(new java.awt.BorderLayout(0, 6));
+        pnlTopo.setLayout(new javax.swing.BoxLayout(pnlTopo, javax.swing.BoxLayout.PAGE_AXIS));
+        pnlCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
+        pnlCliente.setLayout(new javax.swing.BoxLayout(pnlCliente, javax.swing.BoxLayout.PAGE_AXIS));
+        pnlBusca.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        lblBusca.setText("Buscar por nome, sobrenome ou CPF:");
+
+        pnlBusca.add(lblBusca);
+
+        txtBuscaCliente.setColumns(20);
+        txtBuscaCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscaClienteActionPerformed(evt);
+            }
+        });
+
+        pnlBusca.add(txtBuscaCliente);
+
+        btnBuscarCliente.setText("Buscar");
+        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarClienteActionPerformed(evt);
+            }
+        });
+
+        pnlBusca.add(btnBuscarCliente);
+
+
+        pnlCliente.add(pnlBusca);
+
+        pnlSelecaoCliente.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        lblCliente.setText("Cliente:");
+
+        pnlSelecaoCliente.add(lblCliente);
+
+        cbCliente.setPreferredSize(new java.awt.Dimension(380, 26));
+
+        pnlSelecaoCliente.add(cbCliente);
+
+
+        pnlCliente.add(pnlSelecaoCliente);
+
+
+        pnlTopo.add(pnlCliente);
+
+        pnlFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
+        pnlFiltros.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        lblTipo.setText("Tipo:");
+
+        pnlFiltros.add(lblTipo);
+
+        cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(opcoesFiltro(TipoVeiculo.values())));
+
+        pnlFiltros.add(cbTipo);
+
+        lblMarca.setText("Marca:");
+
+        pnlFiltros.add(lblMarca);
+
+        cbMarca.setModel(new javax.swing.DefaultComboBoxModel<>(opcoesFiltro(Marca.values())));
+
+        pnlFiltros.add(cbMarca);
+
+        lblCategoria.setText("Categoria:");
+
+        pnlFiltros.add(lblCategoria);
+
+        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(opcoesFiltro(Categoria.values())));
+
+        pnlFiltros.add(cbCategoria);
+
+        btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
+
+        pnlFiltros.add(btnFiltrar);
+
+
+        pnlTopo.add(pnlFiltros);
+
+
+        pnlConteudo.add(pnlTopo, java.awt.BorderLayout.NORTH);
+
+        scrVeiculos.setBorder(javax.swing.BorderFactory.createTitledBorder("Veículos disponíveis"));
+        scrVeiculos.setPreferredSize(new java.awt.Dimension(820, 280));
+        tblVeiculos.setModel(tableModel);
+        scrVeiculos.setViewportView(tblVeiculos);
+
+        pnlConteudo.add(scrVeiculos, java.awt.BorderLayout.CENTER);
+
+        pnlRodape.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        lblDias.setText("Dias:");
+
+        pnlRodape.add(lblDias);
+
+        txtDias.setColumns(5);
+
+        pnlRodape.add(txtDias);
+
+        lblData.setText("Data da locação:");
+
+        pnlRodape.add(lblData);
+
+        txtData.setColumns(8);
+        txtData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(criarMascara("##/##/####")));
+
+        pnlRodape.add(txtData);
+
+        btnLocar.setText("Locar");
+        btnLocar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLocarActionPerformed(evt);
+            }
+        });
+
+        pnlRodape.add(btnLocar);
+
+
+        pnlConteudo.add(pnlRodape, java.awt.BorderLayout.SOUTH);
+
+
+        getContentPane().add(pnlConteudo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void txtBuscaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscaClienteActionPerformed
+        carregarClientes();
+    }//GEN-LAST:event_txtBuscaClienteActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                TelaLocacao dialog = new TelaLocacao(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
+        carregarClientes();
+    }//GEN-LAST:event_btnBuscarClienteActionPerformed
+
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        carregarVeiculos();
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void btnLocarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocarActionPerformed
+        locar();
+    }//GEN-LAST:event_btnLocarActionPerformed
+
+    private void carregarClientes() {
+        List<Cliente> clientes = clienteController.buscar(txtBuscaCliente.getText());
+        cbCliente.setModel(new DefaultComboBoxModel<>(clientes.toArray(new Cliente[0])));
+    }
+
+    private void carregarVeiculos() {
+        TipoVeiculo tipo = valorOuNull(cbTipo, TipoVeiculo.class);
+        Marca marca = valorOuNull(cbMarca, Marca.class);
+        Categoria categoria = valorOuNull(cbCategoria, Categoria.class);
+        tableModel.setDados(veiculoController.filtrarDisponiveis(tipo, marca, categoria));
+    }
+
+    private void locar() {
+        Cliente cliente = (Cliente) cbCliente.getSelectedItem();
+        if (cliente == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente.");
+            return;
+        }
+        int linha = tblVeiculos.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um veículo na tabela.");
+            return;
+        }
+        int dias;
+        try {
+            dias = Integer.parseInt(txtDias.getText().trim());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Informe a quantidade de dias com um número inteiro.");
+            return;
+        }
+        Calendar data;
+        try {
+            txtData.commitEdit();
+            data = Formatador.lerData((String) txtData.getValue());
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Data inválida. Use o formato dd/mm/aaaa.");
+            return;
+        }
+
+        Veiculo veiculo = tableModel.getItem(linha);
+        try {
+            locacaoController.locar(veiculo, cliente, dias, data);
+            JOptionPane.showMessageDialog(this, "Veículo " + veiculo.getPlaca() + " locado para "
+                    + cliente.getNome() + ".\nValor da locação: "
+                    + Formatador.moeda(veiculo.getLocacao().getValor()));
+            txtDias.setText("");
+            carregarVeiculos();
+        } catch (VeiculoIndisponivelException | ClienteComLocacaoException | IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Não foi possível locar",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private static Object[] opcoesFiltro(Object[] valores) {
+        Object[] opcoes = new Object[valores.length + 1];
+        opcoes[0] = "Todos";
+        System.arraycopy(valores, 0, opcoes, 1, valores.length);
+        return opcoes;
+    }
+
+    private static <T> T valorOuNull(javax.swing.JComboBox<Object> combo, Class<T> tipo) {
+        Object selecionado = combo.getSelectedItem();
+        return tipo.isInstance(selecionado) ? tipo.cast(selecionado) : null;
+    }
+
+    private static javax.swing.text.MaskFormatter criarMascara(String mascara) {
+        try {
+            javax.swing.text.MaskFormatter m = new javax.swing.text.MaskFormatter(mascara);
+            m.setPlaceholderCharacter('_');
+            return m;
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnLocar;
+    private javax.swing.JComboBox<Cliente> cbCliente;
+    private javax.swing.JComboBox<Object> cbCategoria;
+    private javax.swing.JComboBox<Object> cbMarca;
+    private javax.swing.JComboBox<Object> cbTipo;
+    private javax.swing.JFormattedTextField txtData;
+    private javax.swing.JLabel lblBusca;
+    private javax.swing.JLabel lblCategoria;
+    private javax.swing.JLabel lblCliente;
+    private javax.swing.JLabel lblData;
+    private javax.swing.JLabel lblDias;
+    private javax.swing.JLabel lblMarca;
+    private javax.swing.JLabel lblTipo;
+    private javax.swing.JPanel pnlBusca;
+    private javax.swing.JPanel pnlCliente;
+    private javax.swing.JPanel pnlConteudo;
+    private javax.swing.JPanel pnlFiltros;
+    private javax.swing.JPanel pnlRodape;
+    private javax.swing.JPanel pnlSelecaoCliente;
+    private javax.swing.JPanel pnlTopo;
+    private javax.swing.JScrollPane scrVeiculos;
+    private javax.swing.JTable tblVeiculos;
+    private javax.swing.JTextField txtBuscaCliente;
+    private javax.swing.JTextField txtDias;
     // End of variables declaration//GEN-END:variables
 }
