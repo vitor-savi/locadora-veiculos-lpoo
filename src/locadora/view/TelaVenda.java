@@ -1,23 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package locadora.view;
 
-/**
- *
- * @author Vitor Savi
- */
-public class TelaVenda extends javax.swing.JDialog {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaVenda.class.getName());
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import locadora.controller.VeiculoController;
+import locadora.exception.VeiculoIndisponivelException;
+import locadora.model.Veiculo;
+import locadora.model.enums.Categoria;
+import locadora.model.enums.Marca;
+import locadora.model.enums.TipoVeiculo;
+import locadora.util.Formatador;
+import locadora.view.tablemodel.VeiculoVendaTableModel;
 
-    /**
-     * Creates new form TelaVenda
-     */
+public class TelaVenda extends javax.swing.JDialog {
+
+    private final VeiculoController veiculoController = new VeiculoController();
+    private final VeiculoVendaTableModel tableModel = new VeiculoVendaTableModel();
+
     public TelaVenda(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        tblVeiculos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        carregarVeiculos();
+        setLocationRelativeTo(parent);
     }
 
     /**
@@ -29,59 +33,154 @@ public class TelaVenda extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        pnlConteudo = new javax.swing.JPanel();
+        pnlFiltros = new javax.swing.JPanel();
+        lblTipo = new javax.swing.JLabel();
+        cbTipo = new javax.swing.JComboBox<>();
+        lblMarca = new javax.swing.JLabel();
+        cbMarca = new javax.swing.JComboBox<>();
+        lblCategoria = new javax.swing.JLabel();
+        cbCategoria = new javax.swing.JComboBox<>();
+        btnFiltrar = new javax.swing.JButton();
+        scrVeiculos = new javax.swing.JScrollPane();
+        tblVeiculos = new javax.swing.JTable();
+        pnlBotoes = new javax.swing.JPanel();
+        btnVender = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Venda de veículos");
+        getContentPane().setLayout(new java.awt.BorderLayout());
+
+        pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlConteudo.setLayout(new java.awt.BorderLayout(0, 6));
+        pnlFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
+        pnlFiltros.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        lblTipo.setText("Tipo:");
+
+        pnlFiltros.add(lblTipo);
+
+        cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(opcoesFiltro(TipoVeiculo.values())));
+
+        pnlFiltros.add(cbTipo);
+
+        lblMarca.setText("Marca:");
+
+        pnlFiltros.add(lblMarca);
+
+        cbMarca.setModel(new javax.swing.DefaultComboBoxModel<>(opcoesFiltro(Marca.values())));
+
+        pnlFiltros.add(cbMarca);
+
+        lblCategoria.setText("Categoria:");
+
+        pnlFiltros.add(lblCategoria);
+
+        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(opcoesFiltro(Categoria.values())));
+
+        pnlFiltros.add(cbCategoria);
+
+        btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
+
+        pnlFiltros.add(btnFiltrar);
+
+
+        pnlConteudo.add(pnlFiltros, java.awt.BorderLayout.NORTH);
+
+        scrVeiculos.setBorder(javax.swing.BorderFactory.createTitledBorder("Veículos disponíveis para venda"));
+        scrVeiculos.setPreferredSize(new java.awt.Dimension(780, 320));
+        tblVeiculos.setModel(tableModel);
+        scrVeiculos.setViewportView(tblVeiculos);
+
+        pnlConteudo.add(scrVeiculos, java.awt.BorderLayout.CENTER);
+
+        pnlBotoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        btnVender.setText("Vender");
+        btnVender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVenderActionPerformed(evt);
+            }
+        });
+
+        pnlBotoes.add(btnVender);
+
+
+        pnlConteudo.add(pnlBotoes, java.awt.BorderLayout.SOUTH);
+
+
+        getContentPane().add(pnlConteudo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        carregarVeiculos();
+    }//GEN-LAST:event_btnFiltrarActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                TelaVenda dialog = new TelaVenda(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
+        vender();
+    }//GEN-LAST:event_btnVenderActionPerformed
+
+    private void carregarVeiculos() {
+        TipoVeiculo tipo = valorOuNull(cbTipo, TipoVeiculo.class);
+        Marca marca = valorOuNull(cbMarca, Marca.class);
+        Categoria categoria = valorOuNull(cbCategoria, Categoria.class);
+        tableModel.setDados(veiculoController.filtrarDisponiveis(tipo, marca, categoria));
+    }
+
+    private void vender() {
+        int linha = tblVeiculos.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um veículo na tabela.");
+            return;
+        }
+        Veiculo veiculo = tableModel.getItem(linha);
+        int resposta = JOptionPane.showConfirmDialog(this,
+                "Vender o veículo " + veiculo.getPlaca() + " por "
+                + Formatador.moeda(veiculo.getValorParaVenda()) + "?",
+                "Confirmar venda", JOptionPane.YES_NO_OPTION);
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+        try {
+            veiculoController.vender(veiculo);
+            carregarVeiculos();
+            JOptionPane.showMessageDialog(this, "Veículo " + veiculo.getPlaca() + " vendido com sucesso.");
+        } catch (VeiculoIndisponivelException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Não foi possível vender",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private static Object[] opcoesFiltro(Object[] valores) {
+        Object[] opcoes = new Object[valores.length + 1];
+        opcoes[0] = "Todos";
+        System.arraycopy(valores, 0, opcoes, 1, valores.length);
+        return opcoes;
+    }
+
+    private static <T> T valorOuNull(javax.swing.JComboBox<Object> combo, Class<T> tipo) {
+        Object selecionado = combo.getSelectedItem();
+        return tipo.isInstance(selecionado) ? tipo.cast(selecionado) : null;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnVender;
+    private javax.swing.JComboBox<Object> cbCategoria;
+    private javax.swing.JComboBox<Object> cbMarca;
+    private javax.swing.JComboBox<Object> cbTipo;
+    private javax.swing.JLabel lblCategoria;
+    private javax.swing.JLabel lblMarca;
+    private javax.swing.JLabel lblTipo;
+    private javax.swing.JPanel pnlBotoes;
+    private javax.swing.JPanel pnlConteudo;
+    private javax.swing.JPanel pnlFiltros;
+    private javax.swing.JScrollPane scrVeiculos;
+    private javax.swing.JTable tblVeiculos;
     // End of variables declaration//GEN-END:variables
 }
