@@ -1,37 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package locadora.view.tablemodel;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import locadora.model.Cliente;
 
-/**
- *
- * @author Vitor Savi
- */
 public class ClienteTableModel extends AbstractTableModel {
-
-    @Override
-    public int getRowCount() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private final String[] colunas = {"Nome", "Sobrenome", "RG", "CPF", "Endereço"};
+    private List<Cliente> dados = new ArrayList<>();
+    public void setDados(List<Cliente> dados) { this.dados = dados; fireTableDataChanged(); }
+    public Cliente getItem(int linha) { return dados.get(linha); }
+    @Override public int getRowCount() { return dados.size(); }
+    @Override public int getColumnCount() { return colunas.length; }
+    @Override public String getColumnName(int coluna) { return colunas[coluna]; }
+    @Override public Object getValueAt(int linha, int coluna) {
+        Cliente c = dados.get(linha);
+        switch (coluna) {
+            case 0: return c.getNome();
+            case 1: return c.getSobrenome();
+            case 2: return c.getRg();
+            case 3: return c.getCpf();
+            case 4: return c.getEndereco();
+            default: return null;
+        }
     }
-
-    @Override
-    public int getColumnCount() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public String getColumnName(int column) {
-        return super.getColumnName(column); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-    
-    
-    
 }
