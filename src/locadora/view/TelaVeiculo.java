@@ -1,23 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package locadora.view;
 
-/**
- *
- * @author Vitor Savi
- */
-public class TelaVeiculo extends javax.swing.JDialog {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaVeiculo.class.getName());
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Locale;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.text.NumberFormatter;
+import locadora.controller.VeiculoController;
+import locadora.model.Automovel;
+import locadora.model.Motocicleta;
+import locadora.model.Van;
+import locadora.model.Veiculo;
+import locadora.model.enums.Categoria;
+import locadora.model.enums.Estado;
+import locadora.model.enums.Marca;
+import locadora.model.enums.ModeloAutomovel;
+import locadora.model.enums.ModeloMotocicleta;
+import locadora.model.enums.ModeloVan;
+import locadora.model.enums.TipoVeiculo;
 
-    /**
-     * Creates new form TelaVeiculo
-     */
+public class TelaVeiculo extends javax.swing.JDialog {
+
+    private final VeiculoController veiculoController = new VeiculoController();
+
     public TelaVeiculo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        atualizarModelos();
+        setLocationRelativeTo(parent);
     }
 
     /**
@@ -28,60 +41,356 @@ public class TelaVeiculo extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        pnlConteudo = new javax.swing.JPanel();
+        pnlCampos = new javax.swing.JPanel();
+        lblTipo = new javax.swing.JLabel();
+        cbTipo = new javax.swing.JComboBox<>();
+        lblMarca = new javax.swing.JLabel();
+        cbMarca = new javax.swing.JComboBox<>();
+        lblModelo = new javax.swing.JLabel();
+        cbModelo = new javax.swing.JComboBox<>();
+        lblCategoria = new javax.swing.JLabel();
+        cbCategoria = new javax.swing.JComboBox<>();
+        lblEstado = new javax.swing.JLabel();
+        cbEstado = new javax.swing.JComboBox<>();
+        lblAno = new javax.swing.JLabel();
+        txtAno = new javax.swing.JFormattedTextField();
+        lblValorCompra = new javax.swing.JLabel();
+        txtValorCompra = new javax.swing.JFormattedTextField();
+        lblPlaca = new javax.swing.JLabel();
+        txtPlaca = new javax.swing.JFormattedTextField();
+        pnlBotoes = new javax.swing.JPanel();
+        btnIncluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Incluir veículo");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlConteudo.setLayout(new java.awt.BorderLayout(0, 8));
+
+        pnlCampos.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do veículo"));
+        pnlCampos.setLayout(new java.awt.GridBagLayout());
+
+        lblTipo.setText("Tipo:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblTipo, gridBagConstraints);
+
+        cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(TipoVeiculo.values()));
+        cbTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(cbTipo, gridBagConstraints);
+
+        lblMarca.setText("Marca:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblMarca, gridBagConstraints);
+
+        cbMarca.setModel(new javax.swing.DefaultComboBoxModel<>(Marca.values()));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(cbMarca, gridBagConstraints);
+
+        lblModelo.setText("Modelo:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblModelo, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(cbModelo, gridBagConstraints);
+
+        lblCategoria.setText("Categoria:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblCategoria, gridBagConstraints);
+
+        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(Categoria.values()));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(cbCategoria, gridBagConstraints);
+
+        lblEstado.setText("Estado:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblEstado, gridBagConstraints);
+
+        cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new Estado[] {Estado.DISPONIVEL, Estado.NOVO}));
+        cbEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbEstadoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(cbEstado, gridBagConstraints);
+
+        lblAno.setText("Ano:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblAno, gridBagConstraints);
+
+        txtAno.setColumns(12);
+        txtAno.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(criarMascara("####")));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtAno, gridBagConstraints);
+
+        lblValorCompra.setText("Valor de compra (R$):");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblValorCompra, gridBagConstraints);
+
+        txtValorCompra.setColumns(12);
+        txtValorCompra.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(criarFormatoMoeda()));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtValorCompra, gridBagConstraints);
+
+        lblPlaca.setText("Placa:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(lblPlaca, gridBagConstraints);
+
+        txtPlaca.setColumns(12);
+        txtPlaca.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(criarMascara("UUU-####")));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 4, 6);
+        pnlCampos.add(txtPlaca, gridBagConstraints);
+
+        pnlConteudo.add(pnlCampos, java.awt.BorderLayout.CENTER);
+
+        pnlBotoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        btnIncluir.setText("Incluir");
+        btnIncluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncluirActionPerformed(evt);
+            }
+        });
+        pnlBotoes.add(btnIncluir);
+
+        pnlConteudo.add(pnlBotoes, java.awt.BorderLayout.SOUTH);
+
+        getContentPane().add(pnlConteudo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void cbTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoActionPerformed
+        atualizarModelos();
+    }//GEN-LAST:event_cbTipoActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                TelaVeiculo dialog = new TelaVeiculo(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+    private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
+        incluir();
+    }//GEN-LAST:event_btnIncluirActionPerformed
+
+    private void cbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbEstadoActionPerformed
+
+    private void atualizarModelos() {
+        TipoVeiculo tipo = (TipoVeiculo) cbTipo.getSelectedItem();
+        Object[] modelos;
+        switch (tipo) {
+            case AUTOMOVEL:
+                modelos = ModeloAutomovel.values();
+                break;
+            case MOTOCICLETA:
+                modelos = ModeloMotocicleta.values();
+                break;
+            default:
+                modelos = ModeloVan.values();
+                break;
+        }
+        cbModelo.setModel(new DefaultComboBoxModel<>(modelos));
+    }
+
+    private void incluir() {
+        int ano = lerAno();
+        if (ano < 0) {
+            return;
+        }
+        double valor = lerValor();
+        if (valor < 0) {
+            return;
+        }
+        String placa = lerMascara(txtPlaca);
+        if (placa == null) {
+            JOptionPane.showMessageDialog(this, "Placa inválida. Use o formato XXX-0000.");
+            return;
+        }
+
+        Marca marca = (Marca) cbMarca.getSelectedItem();
+        Estado estado = (Estado) cbEstado.getSelectedItem();
+        Categoria categoria = (Categoria) cbCategoria.getSelectedItem();
+        Object modelo = cbModelo.getSelectedItem();
+
+        Veiculo veiculo;
+        switch ((TipoVeiculo) cbTipo.getSelectedItem()) {
+            case AUTOMOVEL:
+                veiculo = new Automovel(marca, estado, null, categoria, valor, placa, ano, (ModeloAutomovel) modelo);
+                break;
+            case MOTOCICLETA:
+                veiculo = new Motocicleta(marca, estado, null, categoria, valor, placa, ano, (ModeloMotocicleta) modelo);
+                break;
+            default:
+                veiculo = new Van(marca, estado, null, categoria, valor, placa, ano, (ModeloVan) modelo);
+                break;
+        }
+
+        veiculoController.incluir(veiculo);
+        JOptionPane.showMessageDialog(this, "Veículo " + placa + " incluído com sucesso.");
+        limparCampos();
+    }
+
+    private int lerAno() {
+        String texto = lerMascara(txtAno);
+        int anoAtual = Calendar.getInstance().get(Calendar.YEAR);
+        if (texto != null) {
+            int ano = Integer.parseInt(texto);
+            if (ano >= 1900 && ano <= anoAtual + 1) {
+                return ano;
             }
-        });
+        }
+        JOptionPane.showMessageDialog(this, "Ano inválido. Informe um ano entre 1900 e " + (anoAtual + 1) + ".");
+        return -1;
+    }
+
+    private double lerValor() {
+        try {
+            txtValorCompra.commitEdit();
+            Number valor = (Number) txtValorCompra.getValue();
+            if (valor != null && valor.doubleValue() > 0) {
+                return valor.doubleValue();
+            }
+        } catch (ParseException ex) {
+            // texto inválido: cai na mensagem abaixo
+        }
+        JOptionPane.showMessageDialog(this, "Informe um valor de compra válido (ex.: 45000,00).");
+        return -1;
+    }
+
+    private String lerMascara(JFormattedTextField campo) {
+        try {
+            campo.commitEdit();
+            return (String) campo.getValue();
+        } catch (ParseException ex) {
+            return null;
+        }
+    }
+
+    private void limparCampos() {
+        txtAno.setValue(null);
+        txtValorCompra.setValue(null);
+        txtPlaca.setValue(null);
+        cbTipo.setSelectedIndex(0);
+        cbMarca.setSelectedIndex(0);
+        cbCategoria.setSelectedIndex(0);
+        cbEstado.setSelectedIndex(0);
+    }
+
+    private static NumberFormatter criarFormatoMoeda() {
+        DecimalFormat formato = new DecimalFormat("#,##0.00",
+                new DecimalFormatSymbols(Locale.forLanguageTag("pt-BR")));
+        NumberFormatter formatter = new NumberFormatter(formato);
+        formatter.setValueClass(Double.class);
+        formatter.setMinimum(0.0);
+        return formatter;
+    }
+
+    private static javax.swing.text.MaskFormatter criarMascara(String mascara) {
+        try {
+            javax.swing.text.MaskFormatter m = new javax.swing.text.MaskFormatter(mascara);
+            m.setPlaceholderCharacter('_');
+            return m;
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnIncluir;
+    private javax.swing.JComboBox<Categoria> cbCategoria;
+    private javax.swing.JComboBox<Estado> cbEstado;
+    private javax.swing.JComboBox<Marca> cbMarca;
+    private javax.swing.JComboBox<Object> cbModelo;
+    private javax.swing.JComboBox<TipoVeiculo> cbTipo;
+    private javax.swing.JLabel lblAno;
+    private javax.swing.JLabel lblCategoria;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblMarca;
+    private javax.swing.JLabel lblModelo;
+    private javax.swing.JLabel lblPlaca;
+    private javax.swing.JLabel lblTipo;
+    private javax.swing.JLabel lblValorCompra;
+    private javax.swing.JPanel pnlBotoes;
+    private javax.swing.JPanel pnlCampos;
+    private javax.swing.JPanel pnlConteudo;
+    private javax.swing.JFormattedTextField txtAno;
+    private javax.swing.JFormattedTextField txtPlaca;
+    private javax.swing.JFormattedTextField txtValorCompra;
     // End of variables declaration//GEN-END:variables
 }
