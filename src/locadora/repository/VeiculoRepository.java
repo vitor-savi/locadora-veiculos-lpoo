@@ -4,10 +4,34 @@
  */
 package locadora.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import locadora.model.Veiculo;
+
 /**
  *
  * @author Vitor Savi
  */
 public class VeiculoRepository {
+    private static VeiculoRepository instancia;
+    private final List<Veiculo> veiculos = new ArrayList<>();
+    
+    private VeiculoRepository() { }
+
+    public static VeiculoRepository getInstance() {
+        if (instancia == null) {
+            instancia = new VeiculoRepository();
+        }
+        
+        return instancia;
+    }
+    
+    public void inserir(Veiculo veiculo) {
+        veiculos.add(veiculo);
+    }
+    
+    public List<Veiculo> listarTodos() {
+        return new ArrayList<>(veiculos);
+    }
     
 }
