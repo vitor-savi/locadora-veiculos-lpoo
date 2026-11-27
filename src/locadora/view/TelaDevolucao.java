@@ -1,23 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package locadora.view;
 
-/**
- *
- * @author Vitor Savi
- */
-public class TelaDevolucao extends javax.swing.JDialog {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaDevolucao.class.getName());
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import locadora.controller.LocacaoController;
+import locadora.model.Cliente;
+import locadora.model.Veiculo;
+import locadora.view.tablemodel.VeiculoLocadoTableModel;
 
-    /**
-     * Creates new form TelaDevolucao
-     */
+public class TelaDevolucao extends javax.swing.JDialog {
+
+    private final LocacaoController locacaoController = new LocacaoController();
+    private final VeiculoLocadoTableModel tableModel = new VeiculoLocadoTableModel();
+
     public TelaDevolucao(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        tblLocados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        carregarTabela();
+        setLocationRelativeTo(parent);
     }
 
     /**
@@ -29,59 +29,77 @@ public class TelaDevolucao extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        pnlConteudo = new javax.swing.JPanel();
+        scrLocados = new javax.swing.JScrollPane();
+        tblLocados = new javax.swing.JTable();
+        pnlBotoes = new javax.swing.JPanel();
+        btnDevolver = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Devolução de veículos");
+        getContentPane().setLayout(new java.awt.BorderLayout());
+
+        pnlConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlConteudo.setLayout(new java.awt.BorderLayout(0, 6));
+        scrLocados.setBorder(javax.swing.BorderFactory.createTitledBorder("Veículos locados"));
+        scrLocados.setPreferredSize(new java.awt.Dimension(1080, 340));
+        tblLocados.setModel(tableModel);
+        scrLocados.setViewportView(tblLocados);
+
+        pnlConteudo.add(scrLocados, java.awt.BorderLayout.CENTER);
+
+        pnlBotoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        btnDevolver.setText("Devolver veículo");
+        btnDevolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDevolverActionPerformed(evt);
+            }
+        });
+
+        pnlBotoes.add(btnDevolver);
+
+
+        pnlConteudo.add(pnlBotoes, java.awt.BorderLayout.SOUTH);
+
+
+        getContentPane().add(pnlConteudo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnDevolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolverActionPerformed
+        devolver();
+    }//GEN-LAST:event_btnDevolverActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                TelaDevolucao dialog = new TelaDevolucao(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    private void devolver() {
+        int linha = tblLocados.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um veículo na tabela.");
+            return;
+        }
+        Veiculo veiculo = tableModel.getItem(linha);
+        Cliente cliente = veiculo.getLocacao().getCliente();
+        int resposta = JOptionPane.showConfirmDialog(this,
+                "Confirmar a devolução do veículo " + veiculo.getPlaca() + ", locado por "
+                + cliente.getNome() + " " + cliente.getSobrenome() + "?",
+                "Confirmar devolução", JOptionPane.YES_NO_OPTION);
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+        locacaoController.devolver(veiculo);
+        carregarTabela();
+        JOptionPane.showMessageDialog(this, "Veículo " + veiculo.getPlaca() + " devolvido com sucesso.");
+    }
+
+    private void carregarTabela() {
+        tableModel.setDados(locacaoController.listarLocados());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDevolver;
+    private javax.swing.JPanel pnlBotoes;
+    private javax.swing.JPanel pnlConteudo;
+    private javax.swing.JScrollPane scrLocados;
+    private javax.swing.JTable tblLocados;
     // End of variables declaration//GEN-END:variables
 }
